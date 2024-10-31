@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment
+  labels: # these are replicaset labels
+    app: nginx
+    tier: frontend
+spec:
+  replicas: 3
+  selector:
+  # these are used to select the pod to create replicas
+    matchLabels:
+      app: nginx
+      tier: frontend
+  # this is pod definition
+  template:
+    metadata:
+      labels:
+        app: nginx
+        tier: frontend
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc
+spec:
+  selector:
+    app: nginx
+    tier: frontend
+  ports:
+    - name: nginx-svc-port
+      protocol: TCP
+      port: 80 # service port
+      targetPort: 80 # container port
